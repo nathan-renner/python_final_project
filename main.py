@@ -1,3 +1,5 @@
+# Author: Nathan Renner
+
 import scrape
 import rank
 
@@ -6,8 +8,10 @@ if __name__ == "__main__":
     searchUrl = "https://www.indeed.com/jobs?q=react%20developer&l=Hoboken%2C%20NJ"
     jobUrl = "https://www.indeed.com/viewjob?jk="
 
-    # get job data from scrape module
-    jobs = scrape.getJobs(searchUrl, jobUrl)
+    # get job data from scrape module (while loop to re-request if response has no data)
+    jobs = []
+    while len(jobs) == 0:
+        jobs = scrape.getJobs(searchUrl, jobUrl)
 
     # open resume file
     resume = open("./assets/resume-react.txt", "r")

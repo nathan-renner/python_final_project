@@ -1,10 +1,12 @@
-import time
+# Author: Nathan Renner
+# Took inspiration from: https://www.geeksforgeeks.org/scraping-indeed-job-data-using-python/
+
 import requests
 from bs4 import BeautifulSoup
 
 # get text data from request grab
 def getData (url):
-    return requests.get(url, timeout = 10).text
+    return requests.get(url).text
 
 # parse test to html from request grab
 def getHTML (url):
