@@ -1,20 +1,27 @@
-from nltk.corpus import stopwords
-stopwords = set(stopwords.words('english'))
+import scrape
+import rank
 
-resume = open("resume.txt", "r");
+if __name__ == "__main__":
+    # Searching for "React Developer" positions around Hoboken, NJ
+    searchUrl = "https://www.indeed.com/jobs?q=react%20developer&l=Hoboken%2C%20NJ"
+    jobUrl = "https://www.indeed.com/viewjob?jk="
 
-dictionary = {}
+    # get job data from scrape module
+    jobs = scrape.getJobs(searchUrl, jobUrl)
 
-for line in resume:
-    for word in line.split():
-        word = word.lower()
-        if word[-1] == ".":
-            word = word[:-1]
-        if word not in stopwords:
-            if dictionary.get(word) == None:
-                dictionary[word] = 1
-                print(word)
-            else:
-                dictionary[word] = dictionary[word] + 1
+    # open resume file
+    resume = open("./assets/resume-react.txt", "r")
 
-print(dictionary)
+    # cycle through jobs and parse job descriptions to have list with unique words
+    for job in jobs:
+        job["wordlist"] = rank.convertString(job["description"])
+
+    # get and rank scores comparing resume to job wordlists
+    jobs = rank.getScores(resume, jobs)
+    print("\n")
+    for job in jobs:
+        print("\n------------------------------------------------------------")
+        print("Score: ", job["score"])
+        print("Job Title: ", job["title"])
+        print("Job ID: ", job["id"])
+        print("Description: " + job["description"].replace("\n", " ")[0:60] + "...")
